@@ -1,8 +1,10 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 
-int main(int argc,char *argv[]) {
+int main(int argc, char *argv[]) {
     DIR *directory;
     struct dirent *dir;
 
@@ -11,44 +13,43 @@ int main(int argc,char *argv[]) {
     readdir(directory);
     if (directory) {
         while ((dir = readdir(directory)) != NULL) {
-            printf("%s ", dir->d_name);
+            write(1, dir->d_name, strlen(dir->d_name));
+            write(1, " ", 1);
             switch (dir->d_type) {
                 case 0:
-                    printf("(Unknown) ");
+                    write(1, "(Unknown) ", 10);
                     break;
                 case 1:
-                    printf("(FIFO/pipe) ");
+                    write(1, "(FIFO/pipe) ", 12);
                     break;
                 case 2:
-                    printf("(Character device) ");
+                    write(1, "(Character device) ", 19);
                     break;
                 case 4:
-                    printf("(Directory) ");
+                    write(1, "(Directory) ", 12);
                     break;
                 case 6:
-                    printf("(Block device) ");
+                    write(1, "(Block device) ", 15);
                     break;
                 case 8:
-                    printf("(Regular file) ");
+                    write(1, "(Regular file) ", 15);
                     break;
                 case 10:
-                    printf("(Symbolic link) ");
+                    write(1, "(Symbolic link) ", 16);
                     break;
                 case 12:
-                    printf("(Socket) ");
+                    write(1, "(Socket) ", 9);
                     break;
                 case 14:
-                    printf("(Whiteout) ");
+                    write(1, "(Whiteout) ", 11);
                     break;
                 default:
-                    printf("(Unknown)\n");
+                    write(1, "(Unknown)\n", 10);
                     break;
             }
         }
-        printf("\n");
+        write(1, "\n", 1);
     }
-    //printf("abri\n");
     closedir(directory);
-    //printf("fechei\n");
     return 0;
 }
